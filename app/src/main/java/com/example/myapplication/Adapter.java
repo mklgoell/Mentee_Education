@@ -1,6 +1,9 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +55,7 @@ public class Adapter extends BaseAdapter {
                 assessment_duration = (TextView) convertView.findViewById(R.id.assessment_time);
                 assessment_description = (TextView) convertView.findViewById(R.id.assessment_description);
                 btn = (Button)convertView.findViewById(R.id.btn);
+                btn.setBackgroundColor(Color.WHITE);
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
                 Date date = new Date();
@@ -61,17 +65,42 @@ public class Adapter extends BaseAdapter {
                 try {
                     if(date.before(dateFormat.parse(dataModel.get(position).getAssessment_date()))) {
                         assessment_date.setText("Attempt before " + dataModel.get(position).getAssessment_date());
+                        btn.setTextColor(Color.BLACK);
                         btn.setText("Start");
+                        btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context,StartSolutionPage.class);
+                                intent.putExtra("ass_id",dataModel.get(position).getAssessment_id());
+                                intent.putExtra("ass_name",dataModel.get(position).getAssessment_name());
+                                intent.putExtra("status","test");
+                                context.startActivity(intent);
+                            }
+                        });
                     }
                     else {
                         assessment_date.setText("Expired");
+                        btn.setTextColor(Color.RED);
                         btn.setText("Solution");
+                        btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context,StartSolutionPage.class);
+                                intent.putExtra("ass_id",dataModel.get(position).getAssessment_id());
+                                intent.putExtra("ass_name",dataModel.get(position).getAssessment_name());
+                                intent.putExtra("status","solution");
+                                context.startActivity(intent);
+                            }
+                        });
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
                 assessment_duration.setText(dataModel.get(position).getAssesment_duration()+" min");
                 assessment_description.setText(dataModel.get(position).getAssessment_description());
+
+
+
             }
         return convertView;
     }

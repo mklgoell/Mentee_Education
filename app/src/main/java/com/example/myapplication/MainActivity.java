@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         listView = (ListView)findViewById(R.id.listView);
         getJSON();
-
     }
     public void getJSON(){
         String json;
